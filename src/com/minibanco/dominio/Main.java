@@ -20,6 +20,7 @@ public class Main {
             2. Depositar
             3. Retirar
             4. Crear cuenta
+            5. Ver movimientos
             0. Salir
             Elige una opción:\s""");
             String opcion = sc.nextLine().trim();
@@ -102,6 +103,20 @@ public class Main {
                         }catch(IllegalArgumentException e) {
                             System.out.println(e.getMessage());
                         }
+                    }
+                }
+                case "5" -> {
+                    Cuenta cuenta = pedirCuenta(sc, repo);
+                    if (cuenta != null) {
+                        if (cuenta.getMovimientos().isEmpty()) {
+                            System.out.println("No hay movimientos para esta cuenta");
+                        } else {
+                            for (Movimiento m : cuenta.getMovimientos()) {
+                                System.out.println(m);
+                            }
+                        }
+                    } else {
+                        System.out.println("Cuenta no encontrada.");
                     }
                 }
                 case "0" -> salir = true;
