@@ -2,11 +2,14 @@ package com.minibanco.dominio;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Cuenta {
     private final String id;
     private final String titular;
     private BigDecimal saldo;
+    private final List<Movimiento> movimientos = new ArrayList<>();
 
     protected Cuenta(String id, String titular, BigDecimal saldo) {
         if (id == null || id.isBlank()) {
@@ -31,6 +34,7 @@ public abstract class Cuenta {
     public void depositar(BigDecimal monto) {
         validarMonto(monto);
         this.saldo = this.saldo.add(monto);
+        movimientos.add(new Movimiento(TipoMovimiento.DEPOSITO, monto));
     }
 
     public void retirar(BigDecimal monto) {
@@ -43,6 +47,7 @@ public abstract class Cuenta {
         }
 
         this.saldo = this.saldo.subtract(total);
+        movimientos.add(new Movimiento(TipoMovimiento.RETIRO, monto));
     }
 
     private static void validarMonto(BigDecimal monto) {
@@ -66,5 +71,9 @@ public abstract class Cuenta {
     @Override
     public String toString() {
         return getClass().getSimpleName()+"[" + getId() + "] saldo=" + getSaldo() + " titular:" + getTitular();
+    }
+
+    public List<Movimiento> getMovimientos() {
+        return List.copyOf(movimientos);
     }
 }
