@@ -4,8 +4,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public abstract class Cuenta {
+public abstract class Cuenta implements Auditable {
     private final String id;
     private final String titular;
     private BigDecimal saldo;
@@ -73,7 +74,24 @@ public abstract class Cuenta {
         return getClass().getSimpleName()+"[" + getId() + "] saldo=" + getSaldo() + " titular:" + getTitular();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Cuenta cuenta = (Cuenta) o;
+        return Objects.equals(id, cuenta.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
     public List<Movimiento> getMovimientos() {
         return List.copyOf(movimientos);
+    }
+
+    @Override
+    public String resumenAuditoria() {
+        return getId() + "|" + getTitular() + "|" + movimientos.size() + " movimientos";
     }
 }
